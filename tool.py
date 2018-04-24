@@ -113,21 +113,25 @@ def read_and_decode(filename_queue):
     reader = tf.TFRecordReader()
     _, serialized_example = reader.read(filename_queue)
     features = tf.parse_single_example(serialized_example, features={
-        'height': tf.FixedLenFeature([], tf.int64),
-        'width': tf.FixedLenFeature([], tf.int64),
+        #'height': tf.FixedLenFeature([], tf.int64),
+        #'width': tf.FixedLenFeature([], tf.int64),
+        #'channel': tf.FixedLenFeature([], tf.int64),
         'image_raw': tf.FixedLenFeature([], tf.string),
-        'label': tf.FixedLenFeature([], tf.int64),
-        })
+        'label': tf.FixedLenFeature([], tf.int64)})
 
+    #height = tf.cast(features['height'], tf.int32)
+    #width = tf.cast(features['width'], tf.int32)
+    #channel = tf.cast(features['channel'], tf.int32)
     image = tf.decode_raw(features['image_raw'], tf.uint8)
-    height = tf.cast(features['height'], tf.int32)
-    width = tf.cast(features['width'], tf.int32)
-    image = tf.reshape(image, [height, width])
-    image = tf.cast(image, tf.float32) * (1. / 255) - 0.5
+    print(tf.shape(image))
+
+    image = tf.reshape(image, [125, 94, 2])
+    #image = tf.cast(image, tf.float32) * (1. / 255) - 0.5
     label = tf.cast(features['label'], tf.int32)
-    image = tf.expand_dims(image, -1)
-    image = tf.image.resize_images(image, (224, 224))
-    label = tf.one_hot(tf.cast(label, tf.int32), depth = 18)
+    print(tf.shape(label))
+    label = tf.one_hot(tf.cast(label, tf.int32), depth = 2)
+    print(tf.shape(image))
+    print(tf.shape(label))
 
     return image, label
 

@@ -27,9 +27,9 @@ def VGG16(x, n_classes, is_pretrain=True):
     x = tool.pool('pool3', x, kernel=[1,2,2,1], stride=[1,2,2,1], is_max_pool=True)
 
     x = tool.FC_layer('fc6', x, out_nodes=4096)
-    #x = tools.batch_norm(x)
+    x = tool.batch_norm(x)
     x = tool.FC_layer('fc7', x, out_nodes=4096)
-    #x = tools.batch_norm(x)
+    x = tool.batch_norm(x)
     x = tool.FC_layer('fc8', x, out_nodes=n_classes)
 
     return x
